@@ -1,0 +1,15 @@
+{
+  "name": "api_videojuegos",
+  "version": "1.0.0",
+  "description": "API para gestionar personajes y misiones en un videojuego.\r Con uso de TypeScript, Programación Orientada a Objetos (POO), programación asíncrona, y versionado de código con Git y GitHub.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  }
+}
