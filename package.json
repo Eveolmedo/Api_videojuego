@@ -4,7 +4,7 @@
   "description": "API para gestionar personajes y misiones en un videojuego.\r Con uso de TypeScript, Programación Orientada a Objetos (POO), programación asíncrona, y versionado de código con Git y GitHub.",
   "main": "index.ts",
   "scripts": {
-    "start": "ts-node index.ts",
+    "start": "ts-node src/index.ts",
     "build": "tsc"
   },
   "keywords": [],
