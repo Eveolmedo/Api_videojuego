@@ -1,6 +1,6 @@
-import { Character } from "./character.js"
+import { Character } from "./Character.js"
 
-class Warrior extends Character {
+export class Warrior extends Character {
     private _attack: number;
     private _defense: number;
 

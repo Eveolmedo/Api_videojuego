@@ -1,4 +1,4 @@
-import { Character } from "./character";
+import { Character } from "./Character";
 
 export class Mage extends Character {
     private _magicPower: number;
