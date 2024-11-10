@@ -4,9 +4,9 @@ export class Warrior extends Character {
     private _attack: number;
     private _defense: number;
 
-    constructor(name: string, level: number, health: number, experience: number, inventory: string[], attack: number, defense: number){
+    constructor(name: string, level: number = 1, health: number = 100, experience: number = 0, inventory: string[] = [], attack: number = 10, defense: number = 5){
         // Super se utiliza dentro de una subclase para hacer referencia a la clase base 
-        super(name, level, health, experience, inventory) // Asegura que el const. de la clase character tambien se ejecute
+        super(name, level, health, experience, inventory) // Asegura que el constructor de la clase character tambien se ejecute
         this._attack = attack;
         this._defense = defense;
     }

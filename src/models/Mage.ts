@@ -4,7 +4,7 @@ export class Mage extends Character {
     private _magicPower: number;
     private _mana: number;
 
-    constructor(name: string, level: number, health: number, experience: number, inventory: string[], magicPower: number, mana : number){
+    constructor(name: string, level: number = 1, health: number = 100, experience: number = 0, inventory: string[] = [], magicPower: number = 20, mana: number = 50){
         super(name, level, health, experience, inventory);
         this._magicPower = magicPower;
         this._mana = mana;
