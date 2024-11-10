@@ -27,5 +27,5 @@ const updateCharacter = (name: string) => {
 }
 
 const deleteCharacter = (name: string) => {
-    
+    return characters = characters.filter((character) => character.name !== name)
 }
