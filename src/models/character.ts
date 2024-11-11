@@ -36,23 +36,23 @@ export class Character {
 
     // Setter modifica el valor de una propiedad privada, permite controlar como se asignan los valores
     public set name(value: string){
-        this._name;
+        this._name = value
     }
 
     public set level(value: number){
-        this._level;
+        this._level = value
     }
 
     public set health(value: number){
-        this._health
+        this._health = value
     }
 
     public set experience(value: number){
-        this._experience
+        this._experience = value
     }
 
     public set inventory(value: string[]){
-        this._inventory
+        this._inventory = value
     }
 }
 
