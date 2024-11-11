@@ -5,7 +5,7 @@ import { Mission, MissionType } from "../models/Mission";
 
 let characters: Character[] = []
 
-export function createCharacter(name: string, level: number, health: number, type: "Warrior" | "Mage" = "Warrior"){
+export function createCharacter(name: string, level: number, health: number, type: "Warrior" | "Mage" = "Warrior"){ //Valor default warrior
     let character: Character;
   
     if (type === "Warrior") {
@@ -22,8 +22,15 @@ export function listCharacters(){
     return characters;
 }
 
-const updateCharacter = (name: string) => {
+export function updateCharacter (name: string, level?: number, health?: number, experience?: number): boolean {
+    let character = characters.find((character) => character.name === name)
+    if (!character) return false; // En caso de que character sea undefined
 
+    if (level !== undefined) character.level = level;
+    if (health !== undefined) character.health = health;
+    if (experience !== undefined) character.experience = experience;
+
+    return true;
 }
 
 const deleteCharacter = (name: string) => {
