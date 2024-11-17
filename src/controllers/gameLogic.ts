@@ -49,18 +49,23 @@ export function assignMission(characterName: string, description: string, diffic
     return true;
 }
 
+export function completeMission(characterName: string, missionIndex: number): boolean {
+    const character = characters.find(c => c.name === characterName);
+    const characterMissions = missions[characterName];
+    
+    if (!character || !characterMissions || characterMissions.length <= missionIndex) return false;
+    
+    const mission = characterMissions[missionIndex];
+    if (character.level > 10 && mission.difficulty === "HARD") {
+      character.experience += mission.reward;
+      characterMissions.splice(missionIndex, 1);
+      return true;
+    }
+    
+    return false;
+  }
+
 export function listMissions(characterName: string): Mission[] | null {
     return missions[characterName] || null;
 }
 
-const warrior = createCharacter("Thorin", 5, 150, "Warrior");
-const mage = createCharacter("Gandalf", 10, 120, "Mage");
-
-// Asignar misiones
-assignMission("Thorin", "Defender el reino", "hard", 200, MissionType.Main);
-assignMission("Thorin", "Desada", "s", 500, MissionType.Main);
-assignMission("Gandalf", "Recuperar la reliquia", "easy", 500, MissionType.Side);
-
-console.log("Misiones de Thorin:");
-console.log(listMissions("Thorin"));
-console.log(missions)
