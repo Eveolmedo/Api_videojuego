@@ -128,6 +128,7 @@ export function startMissions(characterName: string, callback: Function): void {
     let characterMissions = missions[characterName];
     let missionIndex = 0;
     
+    
     function nextMission() {
         if (missionIndex < characterMissions.length) {
             completeMission(characterName, missionIndex)
