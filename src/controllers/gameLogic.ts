@@ -2,7 +2,9 @@ import { Character } from "../models/Character";
 import { Warrior } from "../models/Warrior";
 import { Mage } from "../models/Mage";
 import { Mission, MissionType } from "../models/Mission";
-import { gameEvents } from "../models/GameEvent";
+import { gameEvents } from "../helpers/GameEvent";
+import { calculateExperience } from "../helpers/Experience";
+import { calculateSuccessProbability } from "../helpers/Probabilities";
 
 let characters: Character[] = []
 let missions: { [characterName: string]: Mission[] } = {};
@@ -54,26 +56,57 @@ export function completeMission(characterName: string, missionIndex: number): Pr
     const characterMissions = missions[characterName];
     
     return new Promise((resolve, reject) => {
-        if (!character || !characterMissions || characterMissions.length <= missionIndex) {
-            return reject('Misión no encontrada o personaje no válido');
+        if (!character) {
+            return reject('El Personaje no existe');
+        } else if (!characterMissions) {
+            return reject('El Personaje no tiene misiones asignadas');
         }
         
         const mission = characterMissions[missionIndex];
-        if (character.level > 10 && mission.difficulty === "HARD") {
-            // Aumentamos la experiencia y eliminamos la misión completada
-            character.level++
-            character.experience += mission.reward;
-            console.log(`${character.name} sube de experiencia a ${character.experience} y ahora es nivel ${character.level}`)
-            characterMissions.splice(missionIndex, 1);
-            return resolve(true); // Misión completada con éxito
+        if (mission) {
+            const successProbability = calculateSuccessProbability(character.level, mission.difficulty);
+            console.log(`Probabilidad de éxito: ${(successProbability * 100).toFixed(2)}%`);
+            // Aumentamos la experiencia
+            if (successProbability >= Math.random()) {
+                character.level++
+                let xp = calculateExperience(mission.difficulty) + mission.reward
+                console.log(`¡Misión completada! Ganas ${xp} puntos de experiencia.`);
+                console.log(`${character.name} sube de experiencia a ${character.experience + xp} y ahora es nivel ${character.level}`)
+            } else {
+                return reject(`La misión falló. Intentalo de nuevo.`);
+            }
+            characterMissions.splice(missionIndex, 1); // Eliminamos la mision completada
+            return resolve(true); // Mision completada con éxito
         }
-
-        return reject(`No se pudo completar la misión debido a que el personaje es nivel ${character.level}. SIGUE SUBIENDO!!`);
     });
 }
 
 export function listMissions(characterName: string): Mission[] | null {
     return missions[characterName] || null;
+}
+
+export function startMissions(characterName: string, callback: Function): void {
+    let characterMissions = missions[characterName];
+    let missionIndex = 0;
+
+    function nextMission() {
+        if (missionIndex < characterMissions.length) {
+            completeMission(characterName, missionIndex)
+                .then(() => {
+                    console.log(`Misión "${missionIndex} completada con exito`);
+                    missionIndex++;
+                    nextMission(); // Continuar con la siguiente misión
+                })
+                .catch((error) => {
+                    console.log(`Fallo en la misión "${missionIndex}": ${error}`);
+                    callback(error); // Llamamos al callback si hay un error
+                });
+        } else {
+            console.log('Todas las misiones han sido procesadas');
+        }
+    }
+    
+    nextMission(); // Iniciar el proceso de misiones
 }
 
 export async function triggerEvent(name: string): Promise<void> {
@@ -83,7 +116,7 @@ export async function triggerEvent(name: string): Promise<void> {
     if (!character) {
         return Promise.reject(`No se encontró un personaje con el nombre ${name}`);
     }
-  
+
     console.log("Iniciando generación de eventos aleatorios...");
   
     const intervalId = setInterval(async () => {
@@ -117,34 +150,9 @@ export async function triggerEvent(name: string): Promise<void> {
     // Opcion para detener automaticamente despues de un tiempo
     await new Promise<void>((resolve) => {
       setTimeout(() => {
-        console.log("Eventos aleatorios detenidos automaticamente despues de 1 minuto.");
+        console.log("Los eventos terminaron, estas a salvo por ahora...");
         clearInterval(intervalId);
         resolve();
-      }, 4000); // 1 minuto
+      }, 20000);
     });
-}
-
-export function startMissions(characterName: string, callback: Function): void {
-    let characterMissions = missions[characterName];
-    let missionIndex = 0;
-    
-    
-    function nextMission() {
-        if (missionIndex < characterMissions.length) {
-            completeMission(characterName, missionIndex)
-                .then(() => {
-                    console.log(`Misión "${characterMissions[missionIndex]._description}" completada con exito`);
-                    missionIndex++;
-                    nextMission(); // Continuar con la siguiente misión
-                })
-                .catch((error) => {
-                    console.log(`Fallo en la misión "${characterMissions[missionIndex]._description}": ${error}`);
-                    callback(error); // Llamamos al callback si hay un error
-                });
-        } else {
-            console.log('Todas las misiones han sido procesadas');
-        }
-    }
-    
-    nextMission(); // Iniciar el proceso de misiones
 }

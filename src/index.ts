@@ -24,6 +24,8 @@ console.log(listMissions("Ada"));
 
 startMissions('Leon', () => {})
 
+triggerEvent("Leon")
+
 // Eliminar personaje
 deleteCharacter("Ada");
 console.log("Personajes despues de eliminar a Ada:");
