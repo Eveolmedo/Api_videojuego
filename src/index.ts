@@ -1,4 +1,4 @@
-import { createCharacter, listCharacters, updateCharacter, deleteCharacter, assignMission, completeMission, listMissions, triggerEvent } from "./controllers/gameLogic";
+import { createCharacter, listCharacters, updateCharacter, deleteCharacter, assignMission, startMissions, listMissions, triggerEvent } from "./controllers/gameLogic";
 import { MissionType } from "./models/Mission";
 
 // Crear personajes
@@ -15,23 +15,16 @@ console.log("Leon actualizado:");
 console.log(listCharacters());
 
 // Asignar misiones
-assignMission("Leon", "Rescatar a Ashley", 'HARD', 500, MissionType.Main);
-assignMission("Ada", "Encontrarse con Wesker", 'EASY', 100, MissionType.Side);
+assignMission("Leon", "Encontrarse con Wesker", 'EASY', 100, MissionType.Side);
+assignMission("Ada", "Rescatar a Ashley", 'HARD', 500, MissionType.Main);
 
 // Listar misiones
 console.log(listMissions("Leon"));
 console.log(listMissions("Ada"));
 
-// Completar una mision
-if (completeMission("Leon", 0)) {
-  console.log("Leon completo una mision y gano experiencia.");
-} else {
-  console.log("Leon fallo en la mision.");
-}
+startMissions('Leon', () => {})
 
 // Eliminar personaje
 deleteCharacter("Ada");
 console.log("Personajes despues de eliminar a Ada:");
 console.log(listCharacters());
-
-triggerEvent("Leon")

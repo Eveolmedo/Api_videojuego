@@ -39,7 +39,6 @@ export function deleteCharacter(name: string){
     return characters = characters.filter((character) => character.name !== name)
 }
 
-
 export function assignMission(characterName: string, description: string, difficulty: string, reward: number, type: MissionType): boolean {
     const character = characters.find(c => c.name === characterName);
     if (!character) return false;
@@ -50,26 +49,32 @@ export function assignMission(characterName: string, description: string, diffic
     return true;
 }
 
-export function completeMission(characterName: string, missionIndex: number): boolean {
+export function completeMission(characterName: string, missionIndex: number): Promise<boolean> {
     const character = characters.find(c => c.name === characterName);
     const characterMissions = missions[characterName];
     
-    if (!character || !characterMissions || characterMissions.length <= missionIndex) return false;
-    
-    const mission = characterMissions[missionIndex];
-    if (character.level > 10 && mission.difficulty === "HARD") {
-      character.experience += mission.reward;
-      characterMissions.splice(missionIndex, 1);
-      return true;
-    }
-    
-    return false;
-  }
+    return new Promise((resolve, reject) => {
+        if (!character || !characterMissions || characterMissions.length <= missionIndex) {
+            return reject('Misión no encontrada o personaje no válido');
+        }
+        
+        const mission = characterMissions[missionIndex];
+        if (character.level > 10 && mission.difficulty === "HARD") {
+            // Aumentamos la experiencia y eliminamos la misión completada
+            character.level++
+            character.experience += mission.reward;
+            console.log(`${character.name} sube de experiencia a ${character.experience} y ahora es nivel ${character.level}`)
+            characterMissions.splice(missionIndex, 1);
+            return resolve(true); // Misión completada con éxito
+        }
+
+        return reject(`No se pudo completar la misión debido a que el personaje es nivel ${character.level}. SIGUE SUBIENDO!!`);
+    });
+}
 
 export function listMissions(characterName: string): Mission[] | null {
     return missions[characterName] || null;
 }
-
 
 export async function triggerEvent(name: string): Promise<void> {
     const character = characters.find((char) => char.name === name);
@@ -115,6 +120,30 @@ export async function triggerEvent(name: string): Promise<void> {
         console.log("Eventos aleatorios detenidos automaticamente despues de 1 minuto.");
         clearInterval(intervalId);
         resolve();
-      }, 60000); // 1 minuto
+      }, 4000); // 1 minuto
     });
+}
+
+export function startMissions(characterName: string, callback: Function): void {
+    let characterMissions = missions[characterName];
+    let missionIndex = 0;
+    
+    function nextMission() {
+        if (missionIndex < characterMissions.length) {
+            completeMission(characterName, missionIndex)
+                .then(() => {
+                    console.log(`Misión "${characterMissions[missionIndex]._description}" completada con exito`);
+                    missionIndex++;
+                    nextMission(); // Continuar con la siguiente misión
+                })
+                .catch((error) => {
+                    console.log(`Fallo en la misión "${characterMissions[missionIndex]._description}": ${error}`);
+                    callback(error); // Llamamos al callback si hay un error
+                });
+        } else {
+            console.log('Todas las misiones han sido procesadas');
+        }
+    }
+    
+    nextMission(); // Iniciar el proceso de misiones
 }
