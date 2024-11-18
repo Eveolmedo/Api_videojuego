@@ -1,4 +1,4 @@
-import { createCharacter, listCharacters, updateCharacter, deleteCharacter, assignMission, completeMission, listMissions } from "./controllers/gameLogic";
+import { createCharacter, listCharacters, updateCharacter, deleteCharacter, assignMission, completeMission, listMissions, triggerEvent } from "./controllers/gameLogic";
 import { MissionType } from "./models/Mission";
 
 // Crear personajes
@@ -33,3 +33,5 @@ if (completeMission("Leon", 0)) {
 deleteCharacter("Ada");
 console.log("Personajes despues de eliminar a Ada:");
 console.log(listCharacters());
+
+triggerEvent("Leon")

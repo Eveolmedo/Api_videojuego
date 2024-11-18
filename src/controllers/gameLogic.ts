@@ -2,6 +2,7 @@ import { Character } from "../models/Character";
 import { Warrior } from "../models/Warrior";
 import { Mage } from "../models/Mage";
 import { Mission, MissionType } from "../models/Mission";
+import { gameEvents } from "../models/GameEvent";
 
 let characters: Character[] = []
 let missions: { [characterName: string]: Mission[] } = {};
@@ -69,3 +70,51 @@ export function listMissions(characterName: string): Mission[] | null {
     return missions[characterName] || null;
 }
 
+
+export async function triggerEvent(name: string): Promise<void> {
+    const character = characters.find((char) => char.name === name);
+  
+    // Validacion de la existencia del personaje
+    if (!character) {
+        return Promise.reject(`No se encontró un personaje con el nombre ${name}`);
+    }
+  
+    console.log("Iniciando generación de eventos aleatorios...");
+  
+    const intervalId = setInterval(async () => {
+        try {
+            // Seleccionar un evento aleatorio
+            const randomEvent = gameEvents[Math.floor(Math.random() * gameEvents.length)];
+    
+            // Verificar si el personaje puede participar
+            if (character.health <= 20) {
+                return Promise.reject(`El personaje ${character.name} tiene poca vida (${character.health}) y no puede participar en el evento`);
+            }
+    
+            console.log(`Evento: ${randomEvent.message}`); // Escribe el mensaje del evento 
+
+            // Aplicar el efecto del evento
+            randomEvent.effect(character);
+    
+            console.log(`Estado actual del jugador:`, character);
+    
+            // Detener el intervalo si el personaje muere
+            if (character.health <= 0) {
+                console.log("El jugador ha muerto. Fin del juego");
+                clearInterval(intervalId);
+            }
+        } catch (error) {
+        console.error(`Error:`, error);
+        clearInterval(intervalId); // Detenemos los eventos si ocurre un error
+        }
+    }, 5000);
+  
+    // Opcion para detener automaticamente despues de un tiempo
+    await new Promise<void>((resolve) => {
+      setTimeout(() => {
+        console.log("Eventos aleatorios detenidos automaticamente despues de 1 minuto.");
+        clearInterval(intervalId);
+        resolve();
+      }, 60000); // 1 minuto
+    });
+}
