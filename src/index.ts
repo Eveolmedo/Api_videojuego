@@ -1,4 +1,6 @@
-import { createCharacter, listCharacters, updateCharacter, deleteCharacter, assignMission, startMissions, listMissions, triggerEvent } from "./controllers/gameLogic";
+import { createCharacter, listCharacters, updateCharacter, deleteCharacter } from "./controllers/characterController"
+import { assignMission, startMissions, listMissions } from "./controllers/gameLogic";
+import { triggerEvent } from "./controllers/gameEvent"
 import { MissionType } from "./models/Mission";
 
 // Crear personajes

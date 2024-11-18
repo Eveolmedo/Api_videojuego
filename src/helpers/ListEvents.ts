@@ -1,10 +1,10 @@
-type GameEvent = {
+type listEvents = {
     type: "encounter" | "health" | "trap";
     message: string;
     effect: (character: any) => void;
 };
   
-export let gameEvents: GameEvent[] = [
+export let listEvents: listEvents[] = [
     {
       type: "encounter",
       message: "Esta zona esta llena de zombies que te rodean.",
