@@ -5,7 +5,7 @@ export enum MissionType {
 }
 
 export class Mission {
-    public _description: string;
+    private _description: string;
     private _difficulty: string;
     private _reward: number;
     private _type: MissionType;

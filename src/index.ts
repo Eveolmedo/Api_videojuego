@@ -4,8 +4,8 @@ import { triggerEvent } from "./controllers/gameEvent"
 import { MissionType } from "./models/Mission";
 
 // Crear personajes
-const warrior = createCharacter("Leon", 11, 150, "Warrior");
-const mage = createCharacter("Ada", 10, 120, "Mage");
+createCharacter("Leon", 11, 150, "Warrior");
+createCharacter("Ada", 10, 120, "Mage");
 
 // Listar personajes
 console.log("Personajes creados:");
