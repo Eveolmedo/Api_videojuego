@@ -23,7 +23,7 @@ export function createCharacter(name: string, level: number, health: number, typ
 
 export function listCharacters(){
     try {
-        return characters.length === 0 ? "No hay personajes disponibles" : characters;
+        return characters.length === 0 ? "Todavia no se agrego ningun personaje" : characters;
     } catch (error) {
         return console.error("Error al listar personajes", error);
     }
