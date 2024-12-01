@@ -1,7 +1,6 @@
-import { createCharacter, listCharacters, updateCharacter, deleteCharacter, characters } from "./characterController"
+import { createCharacter, listCharacters, updateCharacter } from "./characterController"
 import { assignMission, startMissions, listMissions } from "./gameLogic";
-import { triggerEvent } from "./gameEvent"
-import { MissionType } from "../models/mission";
+import { triggerEvent } from "./gameEvent";
 import readline from 'readline';
 
 const rl = readline.createInterface({
@@ -22,9 +21,10 @@ export async function startConsoleInterface() {
         console.log("1. Crear un personaje");
         console.log("2. Listar personajes");
         console.log("3. Asignar mision a un personaje");
-        console.log("4. Listar misiones de un pesonaje");
-        console.log("5. Ejecutar misiones de un personaje");
-        console.log("6. Salir");
+        console.log("4. Listar misiones de un personaje");
+        console.log("5. Mejorar un pesonaje")
+        console.log("6. Ejecutar misiones de un personaje");
+        console.log("7. Salir");
 
         const option = await askQuestion("Elige una opción: ");
 
@@ -33,7 +33,7 @@ export async function startConsoleInterface() {
                 const name = await askQuestion("Nombre del personaje: ");
                 const level = parseInt(await askQuestion("Nivel inicial: "), 10);
                 const health = 100
-                const type = await askQuestion("Tipo (Warrior/Mage): ") as "Warrior" | "Mage";
+                const type = await askQuestion("Tipo (Warrior/Mage): ") as "warrior" | "mage";
 
                 createCharacter(name.toLocaleUpperCase(), level, health, type);
                 console.log(`Personaje ${name} creado exitosamente.`);
@@ -47,28 +47,38 @@ export async function startConsoleInterface() {
             case "3": {
                 const characterName = await askQuestion("Nombre del personaje: ");
                 const description = await askQuestion("Descripción de la misión: ");
-                const difficulty = await askQuestion("Dificultad (Easy/Medium/Hard): ");
+                const difficulty = await askQuestion("Dificultad (Easy/Medium/Hard):")  as "easy" | "medium" | "hard";
 
-                assignMission(characterName, description, difficulty);
+                assignMission(characterName.toLocaleUpperCase(), description, difficulty);
                 break;
             }
             case "4": {
                 const name = await askQuestion("Nombre del personaje: ");
-                const missions = listMissions(name)
+                const missions = listMissions(name.toLocaleUpperCase())
                 console.log(missions)
                 break;
             }
             case "5": {
-                const characterName = await askQuestion("Nombre del personaje: ");
-                try {
-                    startMissions(characterName, () => {});
-                } catch (err) {
-                    console.error(err);
-                }
-                
+                const name = await askQuestion("Nombre del personaje: ");
+                console.log("PRESIONA ENTER SI NO QUIERES CAMBIAR ESA CARACTERISTICA")
+                const level = parseInt(await askQuestion("Nuevo nivel: "));
+                const health = parseInt(await askQuestion("Vida del personaje: "));
+                const experience = parseInt(await askQuestion("Experiencia del personaje: "));
+                updateCharacter(name.toLocaleUpperCase(), level, health, experience)
+                console.log(listCharacters());
                 break;
             }
             case "6": {
+                const characterName = await askQuestion("Nombre del personaje: ");
+                try {
+                    startMissions(characterName.toLocaleUpperCase(), () => {});
+                } catch (err) {
+                    console.error(err);
+                }
+                triggerEvent(characterName.toLocaleUpperCase());
+                break;
+            }
+            case "7": {
                 console.log("Saliendo del sistema.");
                 rl.close();
                 return;

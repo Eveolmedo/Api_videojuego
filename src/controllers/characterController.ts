@@ -4,11 +4,11 @@ import { Mage } from "../models/Mage";
 
 export let characters: Character[] = []
 
-export function createCharacter(name: string, level: number, health: number, type: "Warrior" | "Mage" = "Warrior"){ //Valor default warrior
+export function createCharacter(name: string, level: number, health: number, type: "warrior" | "mage" = "warrior"){ //Valor default warrior
     try {
         let character: Character;
     
-        if (type === "Warrior") {
+        if (type.toLocaleLowerCase() === "warrior") {
             character = new Warrior(name, level, health);
         } else {
             character = new Mage(name, level, health);
@@ -32,11 +32,12 @@ export function listCharacters(){
 export function updateCharacter(name: string, level?: number, health?: number, experience?: number){
     try {
         let character = characters.find((character) => character.name === name)
-        if (!character) return false; // En caso de que character sea undefined
+        if (!character) return console.log("El pesonaje no existe");
     
         if (level !== undefined) character.level = level;
         if (health !== undefined) character.health = health;
         if (experience !== undefined) character.experience = experience;
+        console.log(`${character} ACTUALIZADO`)
 
     } catch (error) {
         console.error("Error al actualizar el personaje", error)

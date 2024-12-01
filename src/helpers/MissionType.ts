@@ -1,4 +1,4 @@
-import { MissionType } from "../models/mission";
+import { MissionType } from "../models/Mission";
 
 export function getRandomMissionType(): MissionType {
     const missionTypes = Object.values(MissionType); 

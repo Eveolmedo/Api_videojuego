@@ -1,34 +1,49 @@
 import { characters } from "./characterController";
-import { Mission, MissionType } from "../models/mission";
+import { Mission, MissionType } from "../models/Mission";
 import { calculateExperience } from "../helpers/Experience";
 import { calculateSuccessProbability } from "../helpers/Probabilities";
 import { getRandomMissionType, missionReward } from "../helpers/MissionType";
 
 let missions: { [characterName: string]: Mission[] } = {};
 
-export function assignMission(characterName: string, description: string, difficulty: string, reward?: number, type?: MissionType) {
+export function assignMission(characterName: string, description: string, difficulty: "easy" | "medium" | "hard", reward?: number, type?: MissionType) {
+    let character = characters.find((character) => character.name === characterName)
+    
     try {
-        type = getRandomMissionType();
-        reward = missionReward(type)
-        const mission = new Mission(description, difficulty, reward, type);
-        if (!missions[characterName]) missions[characterName] = []
-        missions[characterName].push(mission);
+        if (character) {
+            type = getRandomMissionType();
+            reward = missionReward(type)
+            difficulty.toLocaleLowerCase()
+            if (difficulty == "easy" || difficulty == "medium" || difficulty == "hard"){
+                const mission = new Mission(description, difficulty, reward, type);
+                if (!missions[characterName]) missions[characterName] = []
+                missions[characterName].push(mission);
+            } else {
+                console.log("Ingrese una dificultad valida");
+            }
+        } else {
+            console.log("El personaje no existe")
+        }
     } catch (error) {
         return console.error("Error al asignar la mision", error);
     }
 }
 
 export function listMissions(characterName: string): Mission[] | null {
-    return missions[characterName] || null;
+    return missions[characterName] || "El personaje no existe o no tiene misiones asignadas";
 }
 
 export function startMissions(characterName: string, callback: Function): void {
     let characterMissions = missions[characterName];
     let missionIndex = 0
-    
+    console.log(characterMissions)
+
     function nextMission() {
         try {       
-            if (characterMissions.length != 0) {
+            if (!characterMissions) {
+                console.log('El personaje no existe o no tiene misiones asignadas');
+            }
+            else if (characterMissions.length != 0) {
                 completeMission(characterName, missionIndex)
                     .then(() => {
                         nextMission(); // Continuar con la siguiente misión
@@ -68,6 +83,7 @@ export function completeMission(characterName: string, missionIndex: number): Pr
                 if (successProbability >= Math.random()) {
                     character.level++
                     let xp = calculateExperience(mission.difficulty, mission.reward)
+                    character.experience += xp
                     console.log(`¡Misión completada! Ganas ${xp} puntos de experiencia.`);
                     console.log(`${character.name} sube de experiencia a ${character.experience + xp} y ahora es nivel ${character.level}`)
                     characterMissions.splice(missionIndex, 1); // Eliminamos la mision completada

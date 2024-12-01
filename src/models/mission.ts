@@ -38,11 +38,7 @@ export class Mission {
     }
 
     public set difficulty(value: string){
-        if(value.toLocaleUpperCase() == "EASY" || value.toLocaleUpperCase() == "MEDIUM" || value.toLocaleUpperCase() == "HARD"){
-            this._difficulty = value
-        } else {
-            console.log("The difficulty must be easy, medium or hard")
-        }
+        this._difficulty = value
     }
 
     public set reward(value: number){
