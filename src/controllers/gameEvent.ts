@@ -43,6 +43,7 @@ export async function triggerEvent(name: string): Promise<void> {
     await new Promise<void>((resolve) => {
       setTimeout(() => {
         console.log("Los eventos terminaron, estas a salvo por ahora...");
+        console.log("Presiona enter para continuar o 7 para salir");
         clearInterval(intervalId);
         resolve();
       }, 20000);

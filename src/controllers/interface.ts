@@ -60,7 +60,7 @@ export async function startConsoleInterface() {
             }
             case "5": {
                 const name = await askQuestion("Nombre del personaje: ");
-                console.log("PRESIONA ENTER SI NO QUIERES CAMBIAR ESA CARACTERISTICA")
+                console.log("INGRESA UN 0 SI NO QUERES CAMBIAR ESA CARACTERISTICA")
                 const level = parseInt(await askQuestion("Nuevo nivel: "));
                 const health = parseInt(await askQuestion("Vida del personaje: "));
                 const experience = parseInt(await askQuestion("Experiencia del personaje: "));

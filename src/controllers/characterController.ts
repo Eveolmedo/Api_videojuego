@@ -29,15 +29,15 @@ export function listCharacters(){
     }
 }
 
-export function updateCharacter(name: string, level?: number, health?: number, experience?: number){
+export function updateCharacter(name: string, level: number, health: number, experience: number){
     try {
         let character = characters.find((character) => character.name === name)
         if (!character) return console.log("El pesonaje no existe");
-    
-        if (level !== undefined) character.level = level;
-        if (health !== undefined) character.health = health;
-        if (experience !== undefined) character.experience = experience;
-        console.log(`${character} ACTUALIZADO`)
+
+        if (level !== 0) character.level = level;
+        if (health !== 0) character.health = health;
+        if (experience !== 0) character.experience = experience;
+        console.log(`${character.name} ACTUALIZADO`)
 
     } catch (error) {
         console.error("Error al actualizar el personaje", error)

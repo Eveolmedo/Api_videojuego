@@ -13,8 +13,7 @@ export function assignMission(characterName: string, description: string, diffic
         if (character) {
             type = getRandomMissionType();
             reward = missionReward(type)
-            difficulty.toLocaleLowerCase()
-            if (difficulty == "easy" || difficulty == "medium" || difficulty == "hard"){
+            if (difficulty.toLocaleLowerCase() == "easy" || difficulty.toLocaleLowerCase() == "medium" || difficulty.toLocaleLowerCase() == "hard"){
                 const mission = new Mission(description, difficulty, reward, type);
                 if (!missions[characterName]) missions[characterName] = []
                 missions[characterName].push(mission);
